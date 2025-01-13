@@ -101,7 +101,7 @@
        ()
        "Control buffer groups for centaur-tabs."
        (list (cond ((or (string= "*eshell*" (buffer-name))
-                        (string= "*vc-dir*" (buffer-name))
+			(string-equal "magit" (substring (buffer-name) 0 5))
                         (string-equal "*cider" (substring (buffer-name) 0 6)))
                      bottom-window-group)
                      ((string-equal "*" (substring (buffer-name) 0 1)) "Emacs")
@@ -117,13 +117,24 @@
                                             (eshell))
                                        (get-buffer "*eshell*")))))
 
+(require 'magit)
 (defun create-or-get-vc-dir
-       ()
-       "Create or get a vc-dir buffer for the current directory."
-       (let ((vc-buffer (get-buffer "*vc-dir*")))
-            (or vc-buffer
-                (save-window-excursion (vc-dir default-directory)
-                                       (get-buffer "*vc-dir*")))))
+    ()
+  "Create or get a vc-dir buffer for the current directory."
+  (let ((existing-buffer
+        (car (cl-remove-if-not
+            (lambda (buf)
+                (with-current-buffer buf
+                (derived-mode-p 'magit-status-mode)))
+            (buffer-list)))))
+    (or existing-buffer
+	(save-window-excursion (let ((display-buffer-alist nil))
+				 (magit-status))
+			       (car (cl-remove-if-not
+				     (lambda (buf)
+				       (with-current-buffer buf
+					 (derived-mode-p 'magit-status-mode)))
+				     (buffer-list)))))))
 
 (defun toggle-bottom-window
        ()
@@ -132,8 +143,8 @@
        (if bottom-window-state
          (progn
            ;; Clean up and close the window
-           (delete-window (get-buffer-window (car bottom-window-state)))
-           (setq bottom-window-state nil))
+           (setq bottom-window-state nil)
+           (delete-window (get-buffer-window (car bottom-window-state))))
          ;; Create and set up the bottom window
          (let* ((eshell-buf (create-or-get-eshell))
                  (vc-buf (create-or-get-vc-dir))
@@ -141,7 +152,7 @@
                    (display-buffer-in-side-window
                      vc-buf
                      `((side . bottom) (slot . 0) (window-height . 0.3)))))
-               ;; Enable centaur-tabs globally if not already enabled
+               ;; Enable centaur-tabs globally if not already enabledo
                (unless centaur-tabs-mode (centaur-tabs-mode t))
                ;; Select the bottom window and set up buffers
                (select-window bottom-window)
