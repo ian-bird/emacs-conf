@@ -239,14 +239,11 @@
 ;; set up the key bindings for repl functions in cider
 (require 'cider)
 (define-key cider-mode-map (kbd "M-RET") 'cider-eval-defun-at-point)
-(define-key cider-mode-map (kbd "C-RET") 'cider-eval-sexp-at-point)
-(define-key prog-mode-map (kbd "C-M-0") 'sp-backward-barf-sexp)
-(define-key prog-mode-map (kbd "C-M-9") 'sp-backward-slurp-sexp)
-(define-key prog-mode-map (kbd "C-M-[") 'sp-forward-barf-sexp)
-(define-key prog-mode-map (kbd "C-M-]") 'sp-forward-slurp-sexp)
-
-
-
+(define-key cider-mode-map (kbd "C-<return>") 'cider-eval-sexp-at-point)
+(define-key prog-mode-map (kbd "C-M-9") 'sp-backward-barf-sexp)
+(define-key prog-mode-map (kbd "C-M-8") 'sp-backward-slurp-sexp)
+(define-key prog-mode-map (kbd "C-M-0") 'sp-forward-barf-sexp)
+(define-key prog-mode-map (kbd "C-M--") 'sp-forward-slurp-sexp)
 
 ;; finish up by only having one window at startup
 (delete-other-windows)
