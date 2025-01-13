@@ -238,5 +238,5 @@
 
 (defun clojure-mode-before-save-hook ()
   (when (eq major-mode 'clojure-mode)
-    zprint))
-(add-hook 'before-save-hook #'clojure-mode-before-save-hook)
+    (zprint)))
+(add-hook 'before-save-hook 'clojure-mode-before-save-hook)
