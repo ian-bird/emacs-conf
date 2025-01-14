@@ -7,7 +7,7 @@
    '("1e6997bc08f0b11a2b5b6253525aed4e1eb314715076a0c0c2486bd97569f18a" default))
  '(display-line-numbers-type 'relative)
  '(package-selected-packages
-   '(zprint-mode exec-path-from-shell orderless vertico company lsp-mode magit centaur-tabs auto-dark rainbow-delimiters treemacs-all-the-icons all-the-icons kaolin-themes cider treemacs neotree smartparens))
+   '(go-mode zprint-mode exec-path-from-shell orderless vertico company lsp-mode magit centaur-tabs auto-dark rainbow-delimiters treemacs-all-the-icons all-the-icons kaolin-themes cider treemacs neotree smartparens))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -215,6 +215,7 @@
 (require 'lsp-mode)
 (add-hook 'clojure-mode-hook 'lsp)
 (add-hook 'ruby-mode-hook 'lsp)
+(add-hook 'go-mode-hook 'lsp)
 ;; enable smart parens by default for some modes
 (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
 (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
@@ -263,3 +264,17 @@
   (when (eq major-mode 'clojure-mode)
     (zprint)))
 (add-hook 'before-save-hook 'clojure-mode-before-save-hook)
+
+(with-eval-after-load 'treemacs
+  (define-key
+   treemacs-mode-map
+   [mouse-1]
+   #'treemacs-single-click-expand-action))
+
+;; set up go mode
+(require 'go-mode)
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
