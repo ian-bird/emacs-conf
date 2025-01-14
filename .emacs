@@ -221,6 +221,8 @@
 (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
 (add-hook 'ruby-mode-hook #'smartparens-mode)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(define-key prog-mode-map (kbd "C-M-n") 'sp-up-sexp)
+(define-key prog-mode-map (kbd "C-M-p") 'sp-backward-down-sexp)
 
 ;; turn on company mode for programming modes
 (require 'company)
@@ -244,6 +246,7 @@
 
 ;; map command p to project file
 (define-key prog-mode-map (kbd "s-p") 'project-find-file)
+(define-key prog-mode-map (kbd "s-F") 'project-find-regexp)
 
 ;; set up the key bindings for repl functions in cider
 (require 'cider)
@@ -280,4 +283,3 @@
 
 ;; paredit raise s-exp
 (define-key prog-mode-map (kbd "C-M-P C-M-R") 'sp-raise-sexp)
-
