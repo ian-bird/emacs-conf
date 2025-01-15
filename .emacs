@@ -282,4 +282,4 @@
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 ;; paredit raise s-exp
-(define-key prog-mode-map (kbd "C-M-P C-M-R") 'sp-raise-sexp)
+(define-key prog-mode-map (kbd "C-M-^") 'sp-raise-sexp)
