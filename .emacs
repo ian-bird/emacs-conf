@@ -14,7 +14,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "JetBrains Mono" :foundry "nil" :slant normal :weight regular :height 120 :width normal)))))
+ '(default ((t (:family "JetBrains Mono" :foundry "nil" :slant normal :weight regular :height 120 :width normal))))
+ '(magit-diff-file-heading ((t (:extend t :foreground "systemOrangeColor" :weight bold)))))
 
 ;; automatically enable line numbers in all programming modes
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
@@ -108,7 +109,7 @@
 (defun centaur-tabs-buffer-groups
        ()
        "Control buffer groups for centaur-tabs."
-       (list (cond ((or (string= "*eshell*" (buffer-name))
+       (list (cond ((or (string= "*shell*" (buffer-name))
 			(string-equal "magit" (substring (buffer-name) 0 5))
                         (string-equal "*cider" (substring (buffer-name) 0 6)))
                      bottom-window-group)
@@ -116,14 +117,14 @@
                    ((derived-mode-p 'prog-mode) "Editing")
                      (t (centaur-tabs-get-group-name (current-buffer))))))
 
-(defun create-or-get-eshell
+(defun create-or-get-shell
        ()
-       "Create or get an eshell buffer."
-       (let ((eshell-buffer (get-buffer "*eshell*")))
-            (or eshell-buffer
+       "Create or get an shell buffer."
+       (let ((shell-buffer (get-buffer "*shell*")))
+            (or shell-buffer
                 (save-window-excursion (let ((display-buffer-alist nil))
-                                            (eshell))
-                                       (get-buffer "*eshell*")))))
+                                            (shell))
+                                       (get-buffer "*shell*")))))
 
 (require 'magit)
 (defun create-or-get-vc-dir
@@ -146,7 +147,7 @@
 
 (defun toggle-bottom-window
        ()
-       "Toggle a bottom window with tabs for eshell and vc-dir."
+       "Toggle a bottom window with tabs for shell and vc-dir."
        (interactive)
        (if bottom-window-state
          (progn
@@ -154,7 +155,7 @@
            (setq bottom-window-state nil)
            (delete-window (get-buffer-window (car bottom-window-state))))
          ;; Create and set up the bottom window
-         (let* ((eshell-buf (create-or-get-eshell))
+         (let* ((shell-buf (create-or-get-shell))
                  (vc-buf (create-or-get-vc-dir))
                  (bottom-window
                    (display-buffer-in-side-window
@@ -164,16 +165,16 @@
                (unless centaur-tabs-mode (centaur-tabs-mode t))
                ;; Select the bottom window and set up buffers
                (select-window bottom-window)
-               (switch-to-buffer eshell-buf)
+               (switch-to-buffer shell-buf)
                ;; Make both buffers members of the bottom window group
-               (with-current-buffer eshell-buf
+               (with-current-buffer shell-buf
                                     (setq centaur-tabs-current-group
                                           bottom-window-group))
                (with-current-buffer vc-buf
                                     (setq centaur-tabs-current-group
                                           bottom-window-group))
                ;; Store the window state
-               (setq bottom-window-state (list eshell-buf vc-buf)))))
+               (setq bottom-window-state (list shell-buf vc-buf)))))
 
 ;; Bind the toggle function to s-j
 (global-set-key (kbd "s-j") 'toggle-bottom-window)
@@ -186,7 +187,7 @@
 (setq-default cursor-type 'bar)
 ;; but use a block cursor in the shell
 (defun shell-cursor () (setq cursor-type 'box))
-(add-hook 'eshell-mode-hook 'shell-cursor)
+(add-hook 'shell-mode-hook 'shell-cursor)
 
 ;; theme set up done last
 ;; load the theme i want
@@ -216,6 +217,9 @@
 (add-hook 'clojure-mode-hook 'lsp)
 (add-hook 'ruby-mode-hook 'lsp)
 (add-hook 'go-mode-hook 'lsp)
+;; set tab width for golang to 4 spaces
+(add-hook 'go-mode-hook (lambda () (setq tab-width 4)))
+
 ;; enable smart parens by default for some modes
 (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
 (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
@@ -229,6 +233,7 @@
 (add-hook 'prog-mode-hook 'company-mode)
 ;; rebind C-h to backspace
 (global-set-key (kbd "C-h") (kbd "DEL"))
+(global-set-key (kbd "M-h") (kbd "M-DEL"))
 (define-key company-mode-map (kbd "C-h") (kbd "DEL"))
 (define-key company-active-map (kbd "C-h") (kbd "DEL"))
 ;; escape should clear the active search map
@@ -282,4 +287,7 @@
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 ;; paredit raise s-exp
-(define-key prog-mode-map (kbd "C-M-P C-M-R") 'sp-raise-sexp)
+(define-key prog-mode-map (kbd "C-M-^") 'sp-raise-sexp)
+
+;; set cursor to blink indefinitely
+(setq blink-cursor-blinks 0)
