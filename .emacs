@@ -1,3 +1,4 @@
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -277,7 +278,11 @@
   (define-key
    treemacs-mode-map
    [mouse-1]
-   #'treemacs-single-click-expand-action))
+   #'treemacs-single-click-expand-action)
+  (define-key
+   treemacs-mode-map
+   (kbd "<space>")
+   ))
 
 ;; set up go mode
 (require 'go-mode)
@@ -288,6 +293,9 @@
 
 ;; paredit raise s-exp
 (define-key prog-mode-map (kbd "C-M-^") 'sp-raise-sexp)
+
+;; paredit backspace s expression
+(define-key prog-mode-map (kbd "C-M-h") 'backward-kill-sexp)
 
 ;; set cursor to blink indefinitely
 (setq blink-cursor-blinks 0)
