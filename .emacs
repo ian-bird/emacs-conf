@@ -281,8 +281,8 @@
    #'treemacs-single-click-expand-action)
   (define-key
    treemacs-mode-map
-   (kbd "<space>")
-   ))
+   (kbd "SPC")
+   #'treemacs-RET-action))
 
 ;; set up go mode
 (require 'go-mode)
