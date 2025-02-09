@@ -299,3 +299,6 @@
 
 ;; set cursor to blink indefinitely
 (setq blink-cursor-blinks 0)
+
+;; this is a temporary fix for tooltips opening on a new screen
+(setopt tooltip-mode nil)
