@@ -302,3 +302,9 @@
 
 ;; this is a temporary fix for tooltips opening on a new screen
 (setopt tooltip-mode nil)
+
+;; add slime mode hook for .cl files
+(add-to-list 'auto-mode-alist '("\\.cl\\'" . common-lisp-mode))
+(add-hook 'lisp-mode-hook #'smartparens-strict-mode)
+(setq inferior-lisp-program "sbcl")
+(define-key lisp-mode-map (kbd "M-RET") 'slime-eval-defun)
