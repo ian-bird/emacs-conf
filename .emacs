@@ -8,7 +8,7 @@
    '("1e6997bc08f0b11a2b5b6253525aed4e1eb314715076a0c0c2486bd97569f18a" default))
  '(display-line-numbers-type 'relative)
  '(package-selected-packages
-   '(go-mode zprint-mode exec-path-from-shell orderless vertico company lsp-mode magit centaur-tabs auto-dark rainbow-delimiters treemacs-all-the-icons all-the-icons kaolin-themes cider treemacs neotree smartparens))
+   '(slime go-mode zprint-mode exec-path-from-shell orderless vertico company lsp-mode magit centaur-tabs auto-dark rainbow-delimiters treemacs-all-the-icons all-the-icons kaolin-themes cider treemacs neotree smartparens))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
