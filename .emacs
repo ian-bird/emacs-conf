@@ -228,6 +228,8 @@
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 (define-key prog-mode-map (kbd "C-M-n") 'sp-up-sexp)
 (define-key prog-mode-map (kbd "C-M-p") 'sp-backward-down-sexp)
+(define-key prog-mode-map (kbd "C-M-e") 'sp-end-of-sexp)
+(define-key prog-mode-map (kbd "C-M-a") 'sp-beginning-of-sexp)
 
 ;; turn on company mode for programming modes
 (require 'company)
