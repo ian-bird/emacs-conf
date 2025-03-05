@@ -312,11 +312,7 @@
 ;; (setq inferior-lisp-program "sbcl")
 ;; (define-key lisp-mode-map (kbd "M-RET") 'slime-eval-defun)
 
-(defun swap-parens-and-brackets ()
-  (keyboard-translate ?\( ?\[)
-  (keyboard-translate ?\) ?\])
-  (keyboard-translate ?\[ ?\()
-  (keyboard-translate ?\] ?\)))
+(setq column-number-mode t)
 
-(add-hook 'lisp-mode-hook #'swap-parens-and-brackets)
+
 
