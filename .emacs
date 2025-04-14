@@ -8,7 +8,7 @@
    '("1e6997bc08f0b11a2b5b6253525aed4e1eb314715076a0c0c2486bd97569f18a" default))
  '(display-line-numbers-type 'relative)
  '(package-selected-packages
-   '(slime go-mode zprint-mode exec-path-from-shell orderless vertico company lsp-mode magit centaur-tabs auto-dark rainbow-delimiters treemacs-all-the-icons all-the-icons kaolin-themes cider treemacs neotree smartparens))
+   '(dape slime go-mode zprint-mode exec-path-from-shell orderless vertico company lsp-mode magit centaur-tabs auto-dark rainbow-delimiters treemacs-all-the-icons all-the-icons kaolin-themes cider treemacs neotree smartparens))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -145,6 +145,8 @@
 				       (with-current-buffer buf
 					 (derived-mode-p 'magit-status-mode)))
 				     (buffer-list)))))))
+
+(setq magit-list-refs-sortby "-creatordate") ; sort by when branch was created
 
 (defun toggle-bottom-window
        ()
@@ -293,6 +295,18 @@
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
+(define-key go-mode-map (kbd "M-?") 'godoc-at-point)
+(define-key go-mode-map (kbd "M-_") 'xref-find-references)
+
+;; add config for debugger
+(use-package dape
+  :config
+  ;; Turn on global bindings for setting breakpoints with mouse
+  (dape-breakpoint-global-mode)
+  
+  ;; Info buffers to the right
+  (setq dape-buffer-window-arrangement 'right))
+
 ;; paredit raise s-exp
 (define-key prog-mode-map (kbd "C-M-^") 'sp-raise-sexp)
 
@@ -309,10 +323,33 @@
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . common-lisp-mode))
 (add-to-list 'auto-mode-alist '("\\.lisp\\'" . lisp-mode))
 (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
-;; (setq inferior-lisp-program "sbcl")
-;; (define-key lisp-mode-map (kbd "M-RET") 'slime-eval-defun)
+
+(setq inferior-lisp-program "sbcl")
+(define-key lisp-mode-map (kbd "M-RET") 'slime-eval-defun)
 
 (setq column-number-mode t)
 
+;; this is a function that allows sending a definition to the shell
+(defun send-bird-lisp-defun-to-repl ()
+  "sends the current function definition to the repl, assuming its running
+in the shell"
+  (let ((jump-back-to (point)))
+    (progn
+      (mark-defun)
+      (copy-region-as-kill (region-beginning) (region-end))
+      (let ((fundef (substring-no-properties (car kill-ring))))
+	(process-send-string "*shell*" (concat (replace-regexp-in-string
+						"\n" "" (replace-regexp-in-string
+							 ";.*?\n" "\n" fundef))
+					       "\n")))
+      (goto-char jump-back-to))))
 
+(defun lookup-bird-lisp-defun ()
+  "look up a function definition in the current file"
+  (progn
+    (mark-word)
+    (copy-region-as-kill (region-beginning) (region-end))
+    (goto-char 0)
+    (search-forward (substring-no-properties (car kill-ring)))))
 
+(define-key prog-mode-map (kbd "s-/") 'comment-or-uncomment-region)
