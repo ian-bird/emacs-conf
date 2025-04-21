@@ -32,12 +32,8 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-;(unless package-archive-contents
-;  (package-refresh-contents))
-
-(dolist (package package-selected-packages)
-  (unless (package-installed-p package)
-    (package-install package)))
+(unless package-archive-contents
+  (package-refresh-contents))
 
 ;; fix loading from applications directory
 (require 'exec-path-from-shell)
@@ -160,7 +156,9 @@
 
 (use-package magit
   :ensure magit
-  :defer t)
+  :defer t
+
+  :custom (magit-list-refs-sortby "-creatordate"))
 
 (defun create-or-get-vc-dir
     ()
@@ -179,8 +177,6 @@
 				       (with-current-buffer buf
 					 (derived-mode-p 'magit-status-mode)))
 				     (buffer-list)))))))
-
-(setq magit-list-refs-sortby "-creatordate") ; sort by when branch was created
 
 (defun toggle-bottom-window
        ()
@@ -321,37 +317,34 @@
 
 ;; set up go mode
 (use-package go-mode
-  :ensure t
+  :ensure go-mode
   
   :hook ((go-mode-hook . lsp)
 	 (go-mode-hook . (lambda () (setq tab-width 4)))
 	 (go-mode-hook . (lambda ()
 			   (add-hook 'before-save-hook #'lsp-format-buffer t t)
-			   (add-hook 'before-save-hook #'lsp-organize-imports t t)))))
-
-<<<<<<< HEAD
-(define-key go-mode-map (kbd "M-?") 'godoc-at-point)
-(define-key go-mode-map (kbd "M-_") 'xref-find-references)
+			   (add-hook 'before-save-hook #'lsp-organize-imports t t))))
+  
+  :bind (:map go-mode-map
+	      ("M-?" . godoc-at-point)
+	      ("M-_" . xref-find-references)))
 
 ;; add config for debugger
 (use-package dape
+  :ensure dape
+  :defer t
+  
   :config
   ;; Turn on global bindings for setting breakpoints with mouse
   (dape-breakpoint-global-mode)
-  
+
+  :custom
   ;; Info buffers to the right
-  (setq dape-buffer-window-arrangement 'right))
+  (dape-buffer-window-arrangement 'right))
 
-;; paredit raise s-exp
-(define-key prog-mode-map (kbd "C-M-^") 'sp-raise-sexp)
-
-;; paredit backspace s expression
-(define-key prog-mode-map (kbd "C-M-h") 'backward-kill-sexp)
-=======
 (use-package ruby-mode
-  :ensure t
+  :ensure ruby-mode
   :hook (ruby-mode-hook . lsp))
->>>>>>> af60850 (switch to use-package. startup speed improved and wayyy more organized)
 
 ;; set cursor to blink indefinitely
 (setq blink-cursor-blinks 0)
@@ -361,7 +354,6 @@
 
 ;; add slime mode hook for .cl files
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . common-lisp-mode))
-<<<<<<< HEAD
 (add-to-list 'auto-mode-alist '("\\.lisp\\'" . lisp-mode))
 (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
 
@@ -372,8 +364,7 @@
 
 ;; this is a function that allows sending a definition to the shell
 (defun send-bird-lisp-defun-to-repl ()
-  "sends the current function definition to the repl, assuming its running
-in the shell"
+  "sends the current function definition to the repl, assuming its running in the shell"
   (let ((jump-back-to (point)))
     (progn
       (mark-defun)
@@ -393,8 +384,3 @@ in the shell"
     (goto-char 0)
     (search-forward (substring-no-properties (car kill-ring)))))
 
-(define-key prog-mode-map (kbd "s-/") 'comment-or-uncomment-region)
-=======
-(setq inferior-lisp-program "sbcl")
-(define-key lisp-mode-map (kbd "M-RET") 'slime-eval-defun)
->>>>>>> af60850 (switch to use-package. startup speed improved and wayyy more organized)
