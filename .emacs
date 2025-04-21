@@ -7,7 +7,7 @@
    '("7ed236688b971b70744d1410d4e86cebde9b2980e0568f38d22db4f319e8d135" "1e6997bc08f0b11a2b5b6253525aed4e1eb314715076a0c0c2486bd97569f18a" default))
  '(display-line-numbers-type 'relative)
  '(package-selected-packages
-   '(dape slime go-mode zprint-mode exec-path-from-shell orderless vertico company lsp-mode magit centaur-tabs auto-dark rainbow-delimiters treemacs-all-the-icons all-the-icons kaolin-themes cider treemacs neotree smartparens))
+   '(diminish dape slime go-mode zprint-mode exec-path-from-shell orderless vertico company lsp-mode magit centaur-tabs auto-dark rainbow-delimiters treemacs-all-the-icons all-the-icons kaolin-themes cider treemacs neotree smartparens))
  '(tool-bar-mode nil))
 
 (custom-set-faces
@@ -294,6 +294,17 @@
   :ensure t
   :init
   (vertico-mode))
+
+;; Emacs minibuffer configurations.
+(use-package emacs
+  :custom
+  ;; Support opening new minibuffers from inside existing minibuffers.
+  (enable-recursive-minibuffers t)
+  ;; Hide commands in M-x which do not work in the current mode.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  ;; Do not allow the cursor in the minibuffer prompt
+  (minibuffer-prompt-properties
+   '(read-only t cursor-intangible t face minibuffer-prompt)))
 
 ;; map command p to project file
 (define-key prog-mode-map (kbd "s-p") 'project-find-file)
