@@ -273,14 +273,7 @@
 
   :diminish company-mode
 
-  :hook prog-mode
-
-  :bind (("C-h" . "DEL")
-	 ("M-h" . "DEL")
-	 :map company-mode-map
-	 ("C-h" . "DEL")
-	 :map company-active-map
-	 ("C-h" . "DEL")))
+  :hook prog-mode)
 
 (use-package orderless
   :ensure t
