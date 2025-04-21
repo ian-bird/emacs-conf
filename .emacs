@@ -248,12 +248,11 @@
   (auto-dark-themes '((kaolin-valley-dark) (kaolin-valley-light)))
   (auto-dark-polling-interval-seconds 5)
 
+  :hook ((auto-dark-dark-mode . (lambda () (load-theme 'kaolin-valley-dark t)))
+	 (auto-dark-light-mode . (lambda () (load-theme 'kaolin-valley-light t))))
+
   :config
   (auto-dark-mode))
-; these need to be outside of use-package cause of strangeness with tabs
-(add-hook 'auto-dark-dark-mode-hook (lambda () (load-theme 'kaolin-valley-dark t)))
-(add-hook 'auto-dark-light-mode-hook (lambda () (load-theme 'kaolin-valley-light t)))
-
 
 ;;
 ;; ---------- setting up programming environment -------
@@ -315,10 +314,10 @@
   :bind (:map cider-mode-map
 	      ("M-RET" . cider-eval-defun-at-point)
 	      ("C-<return>" . cider-eval-sexp-at-point))
-  :hook ((before-save-hook . (lambda ()
+  :hook ((before-save . (lambda ()
 			       (when (eq major-mode 'clojure-mode)
 				 (zprint))))
-	 (clojure-mode-hook . lsp)))
+	 (clojure-mode . lsp)))
               
 ;; finish up by only having one window at startup
 (delete-other-windows)
@@ -330,11 +329,11 @@
 (use-package go-mode
   :ensure go-mode
   
-  :hook ((go-mode-hook . lsp)
-	 (go-mode-hook . (lambda () (setq tab-width 4)))
-	 (go-mode-hook . (lambda ()
-			   (add-hook 'before-save-hook #'lsp-format-buffer t t)
-			   (add-hook 'before-save-hook #'lsp-organize-imports t t))))
+  :hook ((go-mode . lsp-deferred)
+	 (go-mode . (lambda () (setq tab-width 4)))
+	 (go-mode . (lambda ()
+		      (add-hook 'before-save-hook #'lsp-format-buffer t t)
+		      (add-hook 'before-save-hook #'lsp-organize-imports t t))))
   
   :bind (:map go-mode-map
 	      ("M-?" . godoc-at-point)
@@ -355,7 +354,7 @@
 
 (use-package ruby-mode
   :ensure ruby-mode
-  :hook (ruby-mode-hook . lsp))
+  :hook (ruby-mode . lsp))
 
 ;; set cursor to blink indefinitely
 (setq blink-cursor-blinks 0)
