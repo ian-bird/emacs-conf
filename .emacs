@@ -112,7 +112,7 @@
   :ensure centaur-tabs
   :defer t
   
-  :custom ((centaur-tabs-style "slant")
+  :custom ((centaur-tabs-style "bar")
 	   (centaur-tabs-height 26)
 	   (centaur-tabs-set-icons t)
 	   (centaur-tabs-set-modified-marker t))
