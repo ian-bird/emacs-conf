@@ -7,7 +7,7 @@
    '("7ed236688b971b70744d1410d4e86cebde9b2980e0568f38d22db4f319e8d135" "1e6997bc08f0b11a2b5b6253525aed4e1eb314715076a0c0c2486bd97569f18a" default))
  '(display-line-numbers-type 'relative)
  '(package-selected-packages
-   '(diminish dape slime go-mode zprint-mode exec-path-from-shell orderless vertico company lsp-mode magit centaur-tabs auto-dark rainbow-delimiters treemacs-all-the-icons all-the-icons kaolin-themes cider treemacs neotree smartparens))
+   '(geiser-guile geiser diminish dape slime go-mode zprint-mode exec-path-from-shell orderless vertico company lsp-mode magit centaur-tabs auto-dark rainbow-delimiters treemacs-all-the-icons all-the-icons kaolin-themes cider treemacs neotree smartparens))
  '(tool-bar-mode nil))
 
 (custom-set-faces
@@ -316,7 +316,7 @@
 (delete-other-windows)
 
 ;; meta return should send to m-: for evaluation
-(define-key emacs-lisp-mode-map (kbd "M-RET") (kbd "C-x C-e"))
+(define-key emacs-lisp-mode-map (kbd "M-RET") 'eval-last-sexp)
 
 ;; set up go mode
 (use-package go-mode
@@ -387,3 +387,8 @@
     (goto-char 0)
     (search-forward (substring-no-properties (car kill-ring)))))
 
+(use-package geiser
+  :ensure geiser
+  :defer t
+
+  :hook (scheme-mode . geiser-mode))
