@@ -77,6 +77,7 @@
   :hook ((clojure-mode . smartparens-strict-mode)
 	 (lisp-mode . smartparens-strict-mode)
 	 (emacs-lisp-mode . smartparens-strict-mode)
+	 (scheme-mode . smartparens-strict-mode)
 	 ruby-mode)
   
   :bind (:map prog-mode-map
@@ -358,7 +359,6 @@
 ;; add slime mode hook for .cl files
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . common-lisp-mode))
 (add-to-list 'auto-mode-alist '("\\.lisp\\'" . lisp-mode))
-(add-hook 'lisp-mode-hook #'smartparens-strict-mode)
 
 (setq inferior-lisp-program "sbcl")
 (define-key lisp-mode-map (kbd "M-RET") 'slime-eval-defun)
