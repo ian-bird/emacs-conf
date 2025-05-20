@@ -391,4 +391,13 @@
   :ensure geiser
   :defer t
 
-  :hook (scheme-mode . geiser-mode))
+  :hook (scheme-mode . geiser-mode)
+
+  :bind (:map scheme-mode-map
+	      ("M-?" .  geiser-doc-symbol-at-point)
+	      ("M-RET" . geiser-eval-definition)
+	      ("C-RET" . geiser-eval-last-sexp)))
+
+;; for gba development
+(setenv "DEVKITARM" "/opt/devkitpro/devkitARM")
+(setenv "DEVKITPRO" "/opt/devkitpro")
